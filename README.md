@@ -1,4 +1,4 @@
-# primitive-poker
+# terminalpoker
 A simple text-based poker game WIP.
 
 **Version 0.3.2**
