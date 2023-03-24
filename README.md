@@ -38,7 +38,7 @@ A simple text-based poker game WIP.
 
 ============
 
-***Version 0.2***
+***Version 0.2.0***
 
 - Added the <math.h> library to allow for exponent arithmetic
 - Changed the scoring system to use doubles and an accelerated multiplier; makes sure that the correct victor is always chosen when a hand is won
