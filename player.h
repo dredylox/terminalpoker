@@ -19,6 +19,13 @@
 
 //***********************************************
 
+enum PlayerPerception {NO_ANALYSIS, WEAK, SUBPAR, AVERAGE, DECENT, STRONG, CANNOT_READ};                //The perception that a CPU player will have about another player.  These are held both by a player's output and other player's perceptions
+
+//***********************************************
+
+const int DICE_MOD = 10;
+
+//***********************************************
 
 class Player {
 public:
@@ -92,22 +99,23 @@ class CPU : public Player {
 public:
 
 //******
-    CPU(Deck&/*in&out*/ myDeck, float/*in*/ myCash);    //Generates a player, gives them a hand of 5 cards and a sum of cash
+    CPU(Deck&/*in&out*/ myDeck, float/*in*/ myCash);                        //Generates a player, gives them a hand of 5 cards and a sum of cash
 
 //******
-    float BetCash(int, Deck&);                          //The CPU chooses how much money to bet on a hand
-
+    float BetCash(int, Deck&, vector<Perception>);                          //The CPU chooses how much money to bet on a hand - bets are made based on how well the CPU can
+                                                                            //...bluff, how well they can call opponents tells, and how aggressive the player is
 //******
-    float CallBet(float, int, Deck&);                  //The CPU can choose to call or raise an existing bet
+    float CallBet(float, int, Deck&, vector<Perception>);                   //The CPU can choose to call or raise an existing bet - calls and raises are made based on how well the CPU can
+                                                                            //...bluff, how well they can call opponents tells, and how aggressive the player is
 
 //******
     ~CPU();
 
 //******
 private:
-    int intellectStat;
-    int aggressivenessStat;
-    int carefulnessStat;
+    int perceptionStat;                 //This stat will affect the CPU's ability to read tells of other players, realize if other players are reading their tells, and how good their hand is
+    int aggressivenessStat;             //This stat will affect the CPU's willingness to bet very large sums of money, take risks, and put pressure on the rest of the table
+    int bluffStat;                      //This stat will affect the CPU's ability to provide "fake" tells for opponents, and their willingness to make strong bets even with a poor hand (based on their ability to convince opponents of their bluff)
 
 };
 

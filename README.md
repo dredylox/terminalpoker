@@ -1,47 +1,36 @@
-# terminalpoker
+# primitive-poker
 A simple text-based poker game WIP.
 
-**Version 0.3.2**
+**Version 0.4.0**
+- Begun to define the CPU's betting functionality using a convergent decision-tree algorithm that will allow the CPU to use its perception, bluff, and aggressiveness stats to evaluate other players' tells and bluffs, its own hand value, the likeliness it thinks it has to win a hand, how much it's willing to bet on a good or bad hand, and how likely it is to fold given the circumstances
+
+============
+
+**Version 0.3.0**
+- Small update to function that prints a player's hand when they have folded - older version had incorrect player numbers printing.  Fixed now.
 - Fixed the mysterious 4th player calling bug by fixing a for loop that assigns point values to a player based on their hand contents
 - Fixed a bug where a player's points persisted even after folding
 - Betting using the player functionality and subroutines for CPU players is fully functional now - CPU specific functionality needs to be implemented
-
-**Version 0.3.1.5**
 - Now allows the initial bet to be a fold and to pass the leading bet to the next player if desired
    - This has a big bug where calling can pose a problem on the 4th player.  I don't know why this is currently and it needs to be investigated.
-
-**Version 0.3.1.4**
 - Adjusted player and CPU betting so that a full round of betting can be completed FOR all players, BY the user player
    - The same needs laid out in 0.3.1.3 still need further implementation
-
-**Version 0.3.1.3**
 - Reached a state where betting is fully integreated with the rest of the code - it is now possible for the player to bet mid-game
 - Fixed arithmetic on player betting - need to adjust this for player and CPU however
    - Need to develop a "dumb" CPU player, so that the player isn't the one betting on behalf of the CPU's
    - Need a method so that the player can see who is betting at a particular moment
-
-**Version 0.3.1.2**
 - Created quick and rough prototypes of the betting, calling, folding, and raising subroutines
    - The CPU versions of these functions all use the normal player versions for now.  This will be improved in time
 - Implemented the betting of player cash in the main function.
    - This is currently rough and does not allow all players to make a bet as it should.
-
-
-**Version 0.3.1.1**
 - Begun to define the differences between a user player and a CPU player
 - Added stats to the CPU that will be a part of the CPU decision making engine
    - This will determine whether the CPU will be more likely to draw risky cards, take risky bets, raise, call, and/or fold
-
-**Version 0.3.1**
-
 - Added primitive version of "game" routines in main
    - These need to be extracted into functions and optimized
    - Use undefined function prototypes for players that need to be declared and defined
 - Started the process of adding betting to the game
    - This feature will continue to be a primitive iteration until an "AI" is added for the computer players
-
-**Version 0.3.0**
-
 - Added a functional discard pile class and bound it to the deck class
 - Made it so decks shuffle back from the discard pile if necessary (this will be a modular feature in the future)
 - Added discard functionality
