@@ -19,7 +19,7 @@
 
 //***********************************************
 
-enum PlayerPerception {NO_ANALYSIS, WEAK, SUBPAR, AVERAGE, DECENT, STRONG, CANNOT_READ};                //The perception that a CPU player will have about another player.  These are held both by a player's output and other player's perceptions
+enum PlayerPerception {WEAK, SUBPAR, NO_ANALYSIS, AVERAGE, CANNOT_READ, DECENT, STRONG};                //The perception that a CPU player will have about another player.  These are held both by a player's output and other player's perceptions
 
 //***********************************************
 
@@ -116,6 +116,8 @@ private:
     int perceptionStat;                 //This stat will affect the CPU's ability to read tells of other players, realize if other players are reading their tells, and how good their hand is
     int aggressivenessStat;             //This stat will affect the CPU's willingness to bet very large sums of money, take risks, and put pressure on the rest of the table
     int bluffStat;                      //This stat will affect the CPU's ability to provide "fake" tells for opponents, and their willingness to make strong bets even with a poor hand (based on their ability to convince opponents of their bluff)
+    PlayerPerception opinion;           //This variable will determine how the player feels about their own hand
+    PlayerPerception otherPlayer[3];    //This variable will determine how the player feels about the rest of the players' hands
 
 };
 

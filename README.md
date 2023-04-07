@@ -1,5 +1,19 @@
-# terminalpoker
+# primitive-poker
 A simple text-based poker game WIP.
+
+
+
+**Version 0.4.3**
+- Added and defined a subroutine by which the CPU can discard undesirable cards.
+   - As it stands, this is a straightforward task that assumes that all CPU's will pick the most obvious option.  I am not sure if this will change to give the CPU more decision-making capability, as "poor" cards are pretty straight forward, and I don't want to overcomplicate CPU decision making.  I think, instead, a stat-based dice check will determine if the CPU will decide to discard cards at all, and another stat-based dice roll will determine how "strict" the CPU is; if they will be willing to keep their cards on a more risky hand.
+
+**Version 0.4.2**
+- Further defined the CPU's betting algorithm and begun to define means for it to communicate with the player and the player's ability to communicate with the CPU in terms of betting and bluffing.
+
+**Version 0.4.1**
+- Added functionality for CPU to gather information from other players based on stats, and to use this information to increase and decrease the likeliness that they will make a certain decision - such as betting, folding, and how much to bet by.
+   - Very much a WIP - Need to add functionality for generating an "opinion" based on player tells before this will be functional
+   - Also need to generate a similar function for deciding on raises and calls - the math for determining how "worth it" a call is vs folding as well as based on how much money they've already put into the pot need to be formulated
 
 **Version 0.4.0**
 - Begun to define the CPU's betting functionality using a convergent decision-tree algorithm that will allow the CPU to use its perception, bluff, and aggressiveness stats to evaluate other players' tells and bluffs, its own hand value, the likeliness it thinks it has to win a hand, how much it's willing to bet on a good or bad hand, and how likely it is to fold given the circumstances
@@ -38,7 +52,7 @@ A simple text-based poker game WIP.
 
 ============
 
-***Version 0.2.0***
+***Version 0.2***
 
 - Added the <math.h> library to allow for exponent arithmetic
 - Changed the scoring system to use doubles and an accelerated multiplier; makes sure that the correct victor is always chosen when a hand is won

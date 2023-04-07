@@ -250,11 +250,71 @@ private:
     }
 
 //******
-    float CPU::BetCash(int playerNum, Deck& dInput, std::vector<PlayerPerception> inPercept
-                       std::vector<double> inScores, std::vector<int> inBluff
+    PlayerPerception CPU::JudgeHand() {                 //Gets a judgement for the hand and attempts to pass a bluffed judgement to the table
+
+        float temp = hCards->CountPoints(false);
+        std::random_device scoreMake;                           //Random device
+        std::mt19937 seedMake(scoreMake());                     //Random device seed
+        std::uniform_int_distribution<int> randInt(1, 100);     //The object that produces our random number
+
+
+        if (temp <= 10) {
+            opinion = WEAK;
+        }
+        else if (temp <= 30) {
+            opinion = SUBPAR;
+        }
+        else if (temp <= 720) {
+            opinion = AVERAGE;
+        }
+        else if (temp <= 2400) {
+            opinion = DECENT;
+        }
+        else {
+            opinion = STRONG;
+        }
+
+        if (bluffStat + (scoreMake(seedMake) / DICE_MOD) > 10) {
+            GetTell(int(STRONG) - int(opinion));
+            return PlayerPerception(int(STRONG) - int(opinion));
+        }
+        else {
+            GetTell();
+            return opinion;
+        }
+    }
+
+//******
+    void CPU::GetTell(PlayerPerception opinion) {
+        switch(opinion) {
+            case WEAK:      "\nThey don't look too happy with the cards they were dealt.\n\n"; break;
+            case SUBPAR:    "\nThey look as though their cards could be better.\n\n"; break;
+            case AVERAGE:   "\nThey look indifferent; their hand must be serviceable.\n\n"; break;
+            case DECENT:    "\nThey look happy; they must have good cards in their hand.\n\n"; break;
+            case STRONG:    "\nThey almost look estactic - their hand must be excellent.\n\n"; break;
+            default:        "\nYou can't really get a good read on their face.  They could have anything.\n\n"; break;
+        }
+    }
+
+//******
+    void CPU::DiscardCards(Deck& dInput) {
+        //std::random_device handMake;                           //Random device
+        //std::mt19937 seedMake(handMake());                     //Random device seed
+        //std::uniform_int_distribution<int> randInt(1, 100);     //The object that produces our random number
+
+        if (opinion < STRONG) {
+            std::vector<int> selections;
+            hCards->SelectCards(selections);
+            hCards->CPUDiscard(dInput);
+        }
+    }
+
+//******
+    float CPU::BetCash(int playerNum, Deck& dInput, std::vector<PlayerPerception> inPerception,
+                       std::vector<double> inScores, std::vector<int> inBluff,
                        std::vector<PlayerPerception> inOpinion) {                               //The CPU chooses how much money to bet on a hand
 
-        int actionScore = 0;                                    //This score determines if the player will bet or if they will fold
+        float actionScore = 0;                                    //This score determines if the player will bet or if they will fold
         double fTemp;                                           //Temporarily hold float values
         int iTemp;                                              //Temporarily hold int values
 
@@ -269,14 +329,14 @@ private:
             float fTempCash = CheckCash() + 1;                                      //Sets temp cash just out of range to prime loop
             while (fTempCash > fCash || fTempCash < 0) {                            //Loop repeats until fTempCash is a valid amount (greater than or equal to 0 and less than total cash)
 
-                fTemp = (hCards->CountPoints(false) / 10000) + (scoreMake(seedMake) / DICE_MOD);    //Store 1/10000th the point value of the hand into fTemp + a dice roll evaluated at the roll 1 through 100 divided by 20.
-                ftemp *= perceptionStat;                                                            //The hand's value is multiplied by the player's perception stat - this means that great hands will be
+                fTemp = (hCards->CountPoints(false) / 100) + (scoreMake(seedMake) / DICE_MOD);      //Store 1 / 100th the point value of the hand into fTemp + a dice roll evaluated at the roll 1 through 100 divided by 20.
+                actionScore = fTemp * perceptionStat;                                               //The hand's value is multiplied by the player's perception stat - this means that great hands will be
                                                                                                     //...generating exponentially more action points than weak hands
 
                 for (int iter = 0; iter < PLAYER_COUNT - 1; iter++) {                       //Goes through each opponent and tries to gather tells from them based on their overt tells and their bluff stat vs your perception stat w/ dice rolling
-                    fTemp = perceptionStat += (scoreMake(seedMake) / DICE_MOD);
-                    int newTemp = (inBluff[iter] + (scoreMake(seedMake) / DICE_MOD));
-                    if (iTemp >= newTemp) {
+                    fTemp = perceptionStat + (scoreMake(seedMake) / DICE_MOD);
+                    float newTemp = (inBluff[iter] + (scoreMake(seedMake) / DICE_MOD));
+                    if (fTemp >= newTemp) {
                         PlayerPerception tempPercept = inPerception[iter];                  //Stores the current opponent's opinion/bluff of itself in a temporary variable
                         double opponentScore = inScores[iter]
                                 - (inBluff[iter] + (scoreMake(seedMake) / DICE_MOD));       //Stores the opponents hand score slightly obfuscated by the opponents bluff stat and a dice roll
@@ -301,19 +361,51 @@ private:
                         else {
                             yourOpinion[iter] = AVERAGE;                                                        //If it's between -5 and 5, it's an average hand - it could go either way
                         }
+
                     }
 
                     else {
-                        yourOpinion[iter] = inPerception[iter];                                         //If you cannot see through their bluff, you think their hand is as good as the impression they give you
+                        yourOpinion[iter] = inPerception[iter];                                                 //If you cannot see through their bluff, you think their hand is as good as the impression they give you
+                    }
+
+                    actionScore -= ((2 * (int(yourOpinion[iter]) - opinion) * (perceptionStat + (scoreMake(seedMake) / DICE_MOD)))
+                                        + (int(yourOpinion[iter]) * (scoreMake(seedMake) / DICE_MOD)));                                     //This will take away or add to the action score based on how confident you feel about your own hand
+                                                                                                                                            //...vs how you feel about the player tells, with a slight modifier based on raw player tell data
+                                                                                                                                            //...added to a dice roll
+                }
+
+                for (auto i : inOpinion) {
+                    if ((bluffStat + (scoreMake(seedMake) / DICE_MOD)) >= 5) {                                                  //Uses bluff stat and a dice roll to see if the player can use information to adjust player action score
+                        if (i = CANNOT_READ) {
+                           actionScore += int (opinion - AVERAGE) * (scoreMake(seedMake) / DICE_MOD);                           //If the opponent cannot be read or is a player, instead the action is modified based on how good the player's hand is
+                        }
+                        else if (i > AVERAGE && opinion > AVERAGE) {                                                            //If the opponent thinks the player's hand is great and it is, action score is increased
+                            actionScore += int(opinion - AVERAGE) * (bluffStat * (scoreMake(seedMake) / DICE_MOD));
+                        }
+                        else if (i < AVERAGE && opinion < AVERAGE) {                                                            //If the opponent thinks the player's hand is poor and it is, action score is decreased
+                            actionScore -= int(AVERAGE - opinion) * (bluffStat * (scoreMake(seedMake) / DICE_MOD));
+                        }
+                        else if (i < AVERAGE && opinion >= AVERAGE) {                                                           //If the opponent thinks the player's hand is poor and it ISN'T, action score is INCREASED
+                            actionScore += ((int (opinion - AVERAGE) + 1) * (bluffStat * (scoreMake(seedMake)) / DICE_MOD));
+                        }
+                    }
+                    else {                                                                                                      //In all other situations, action score is modified based on how good the player hand is
+                        actionScore += int (opinion - AVERAGE) * (scoreMake(seedMake) / DICE_MOD);
                     }
                 }
 
+                if (actionScore * (scoreMake(seedMake) / DICE_MOD)
+                * (aggressivenessStat * (scoreMake(seedMake) / DICE_MOD)) > 30 /*NEED TO MAKE THIS A CONSTANT*/) {
+                    fTempCash = (fCash / 15) * (aggressivenessStat * (scoreMake(seedMake) / DICE_MOD));
+                }
 
-                if (fTempCash == 0) {                                                           //If the player enters 0, they fold their hand
+                else {                                                              //If the player bets nothing, they fold their hand
+                    fTempCash = 0;
                     Fold(dInput);
                     break;
                 }
             }
+            currWager = fTempCash;
             fCash -= fTempCash;                                                     //Subtracts the total amount to be bet from the total cash the player has
             return fTempCash;                                                       //Returns this value to the calling function    -   POT SHOULD BE CALLING OBJECT
         }

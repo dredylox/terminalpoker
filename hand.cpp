@@ -627,6 +627,163 @@
     }
 
 //******
+    void Hand::SelectCards(std::vector<int>& selections) {              //Will pass back a vector of the cards the CPU would want to discard
+        Card* prevCard = nullptr;
+        std::vector<Card*> goodCards;
+        std::vector<Card*> badCards;
+        bool streak = false;
+        bool hasAce = false;
+        int nearStraight = 0;
+        int nearFlush = 0;
+        int discardCount = 0;
+        for (auto i : vCards) {
+            if (prevCard == nullptr) {
+                prevCard = i;
+            }
+            else {
+                if (i->GetNum() == prevCard->GetNum()) {
+                    if (streak) {
+                        goodCards.push_back(prevCard);
+                    }
+                    else {
+                        streak = true;
+                        goodCards.push_back(prevCard);
+                        goodCards.push_back(i);
+                    }
+                }
+                else if (i->GetNum() == prevCard->GetNum() + 1 || i->GetSuit() == prevCard->GetSuit()) {
+                    if (!streak) {
+                        streak = true;
+                        if (i->GetNum() == prevCard->GetNum() + 1) {
+                            nearStraight++;
+                        }
+
+                        if (i->GetSuit() == prevCard->GetSuit()) {
+                            nearFlush++;
+                        }
+
+                        goodCards.push_back(prevCard);
+                        goodCards.push_back(i);
+
+                    }
+
+                    else () {
+                        if (i->GetNum() == prevCard->GetNum() + 1) {
+                            nearStraight++;
+                        }
+
+                        if (i->GetSuit() == prevCard->GetSuit()) {
+                            nearFlush++;
+                        }
+
+                        goodCards.push_back(prevCard);
+                        goodCards.push_back(i);
+
+                    }
+
+                }
+                else {
+                    if (!(streak)) {
+                        badCards.push_back(prevCard);
+                    }
+                    else {
+                        streak = false;
+                    }
+                    if (i->GetSuit() == vCards.back()->GetSuit() && i->GetNum() == vCards.back()->GetNum()) {
+                        badCards.push_back(i);
+                    }
+                }
+                prevCard = i;
+            }
+        }
+
+
+
+
+
+        for (auto i : goodCards) {
+            if (i->GetNum() == ACE) {
+                hasAce = true;
+            }
+
+        }
+
+
+        for (auto i : badCards) {
+            if (i->GetNum() == ACE) {
+                hasAce = true;
+            }
+        }
+
+
+        if (nearFlush <= 2 && nearStraight <= 2) {
+            streak = false;
+            prevCard = nullptr;
+            for (auto i : goodCards) {
+                if (prevCard == nullptr) {
+                    prevCard = i;
+                }
+                else {
+                    if (i->GetNum() == prevCard->GetNum()) {
+                        if (streak) {
+                            goodCards.push_back(prevCard);
+                        }
+                        else {
+                            streak = true;
+                            goodCards.push_back(prevCard);
+                            goodCards.push_back(i);
+                        }
+                    }
+                    else {
+                        if (!(streak)) {
+                            badCards.push_back(prevCard);
+                        }
+                        else {
+                            streak = false;
+                        }
+                        if (i->GetSuit() == goodCards.back()->GetSuit() && i->GetNum() == goodCards.back()->GetNum()) {
+                            badCards.push_back(i);
+                        }
+                    }
+                    prevCard = i;
+                }
+            }
+        }
+
+
+        if (badCards.size() >= 3) {
+            if (hasAce) {
+                discardCount = 4
+            }
+            else {
+                discardCount = 3;
+            }
+        }
+        else {
+            discardCount = badCards.size();
+        }
+
+        for (int iter = discardCount; iter > 0; iter--) {
+            badCards.pop_back();
+        }
+
+        for (int iter = 0; iter < vCards.size(); iter++) {
+            for (auto k : badCards) {
+                if ((k->GetNum() == vCards.at(iter).GetNum()) && (k->GetSuit() == vCards.at(iter.GetSuit()))) {
+                    selections.push_back(iter);
+                }
+            }
+        }
+        prevCard = nullptr;
+
+    }
+
+//******
+    void Hand::CPUDiscard(Deck& dInput, std::vector<int> selections) {               //NEED TO CHANGE THIS FUNCTIONS LOGIC TO ALLOW FOR PLAYER STATS TO COME INTO PLAY!!!!!!!
+
+    }
+
+//******
     void Hand::ShowScore(int iOutput, double iTotal) const {
         switch (iOutput) {
             case 100 : std::cout << "\nOne pair!\n"; break;
