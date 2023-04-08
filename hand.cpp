@@ -628,15 +628,25 @@
 
 //******
     void Hand::SelectCards(std::vector<int>& selections) {              //Will pass back a vector of the cards the CPU would want to discard
-        Card* prevCard = nullptr;
-        std::vector<Card*> goodCards;
-        std::vector<Card*> badCards;
-        bool streak = false;
-        bool hasAce = false;
-        int nearStraight = 0;
-        int nearFlush = 0;
-        int discardCount = 0;
+        Card* prevCard = nullptr;                                       //The last card analyzed by the player
+        std::vector<Card*> goodCards;                                   //Cards that the player will keep
+        std::vector<Card*> badCards;                                    //Cards that the player will throw away
+        std::vector<Card*> straightCheck;                               //A copy of bad cards - this will be used for the player to determine if they're nearing a straight
+        std::vector<Card*> flushCheck;                                  //A copy of bad cards - this will be used for the player to determine if they're nearing a flush
+        bool streak = false;                                            //State check to see if the player is currently on a streak of like cards
+        bool hasAce = false;                                            //State check to see if the player has an ace
+        int nearStraight = 0;                                           //Checks to see how close the player is to having a straight
+        int nearFlush = 0;                                              //Checks to see how close the player is to having a flush
+        int discardCount = 0;                                           //The number of cards the player would discard in this instance
+
+
+        std::vector<std::vector<Card*>> straightCards;
+        std::vector<std::vector<Card*>> flushCards;
+
         for (auto i : vCards) {
+            if (i->GetNum() == ACE) {
+                hasAce = true;
+            }
             if (prevCard == nullptr) {
                 prevCard = i;
             }
@@ -651,105 +661,138 @@
                         goodCards.push_back(i);
                     }
                 }
-                else if (i->GetNum() == prevCard->GetNum() + 1 || i->GetSuit() == prevCard->GetSuit()) {
-                    if (!streak) {
-                        streak = true;
-                        if (i->GetNum() == prevCard->GetNum() + 1) {
-                            nearStraight++;
-                        }
-
-                        if (i->GetSuit() == prevCard->GetSuit()) {
-                            nearFlush++;
-                        }
-
-                        goodCards.push_back(prevCard);
-                        goodCards.push_back(i);
-
-                    }
-
-                    else () {
-                        if (i->GetNum() == prevCard->GetNum() + 1) {
-                            nearStraight++;
-                        }
-
-                        if (i->GetSuit() == prevCard->GetSuit()) {
-                            nearFlush++;
-                        }
-
-                        goodCards.push_back(prevCard);
-                        goodCards.push_back(i);
-
-                    }
-
-                }
                 else {
                     if (!(streak)) {
                         badCards.push_back(prevCard);
+                        straightCheck.push_back(prevCard);
+                        flushCheck.push_back(prevCard);
                     }
                     else {
                         streak = false;
                     }
                     if (i->GetSuit() == vCards.back()->GetSuit() && i->GetNum() == vCards.back()->GetNum()) {
                         badCards.push_back(i);
+                        straightCheck.push_back(i);
+                        flushCheck.push_back(i);
                     }
                 }
                 prevCard = i;
             }
         }
 
+        //**
 
-
-
-
-        for (auto i : goodCards) {
-            if (i->GetNum() == ACE) {
-                hasAce = true;
-            }
-
-        }
-
-
-        for (auto i : badCards) {
-            if (i->GetNum() == ACE) {
-                hasAce = true;
-            }
-        }
-
-
-        if (nearFlush <= 2 && nearStraight <= 2) {
-            streak = false;
-            prevCard = nullptr;
-            for (auto i : goodCards) {
-                if (prevCard == nullptr) {
-                    prevCard = i;
-                }
-                else {
-                    if (i->GetNum() == prevCard->GetNum()) {
-                        if (streak) {
-                            goodCards.push_back(prevCard);
+        if (goodCards.size() == 0) {
+            while (straightCheck.size() > 0) {
+                std::vector<int> tempNums;
+                CardNum tempNum;
+                for (int iter = 0; iter < straightCheck.size(); iter++) {
+                    if (iter == 0) {
+                        tempNum = badCards.at(iter)->GetNum();
+                        tempNums.push_back(iter);
+                    }
+                    else {
+                        if (straightCheck.at(iter)->GetNum() < tempNum && straightCheck.at(iter)->GetNum() > tempNum - 5) {
+                            tempNums.push_back(iter);
                         }
-                        else {
-                            streak = true;
-                            goodCards.push_back(prevCard);
+                    }
+                }
+                std::vector<Card*> tempVect;
+                for (auto i : tempNums) {
+                    tempVect.push_back(straightCheck.at(i));
+                }
+                for (auto i : tempNums) {
+                    straightCheck.erase(i);
+                }
+                straightCards.push_back(tempVect);
+                tempVect.clear();
+            }
+            while (flushCheck.size > 0) {
+                std::vector<int> tempNums;
+                CardSuit tempSuit;
+                for (int iter = 0; iter < flushCheck.size(); iter++) {
+                    if (iter == 0) {
+                        tempSuit = badCards.at(iter)->GetSuit();
+                        tempNums.push_back(iter);
+                    }
+                    else {
+                        if (flushCheck.at(iter)->GetSuit == tempSuit) {
+                            tempNums.push_back(iter);
+                        }
+                    }
+                }
+                std::vector<Card*> tempVect;
+                for (auto i : tempNums) {
+                    tempVect.push_back(flushCheck.at(i));
+                }
+                for (auto i : tempNums) {
+                    flushCheck.erase(i);
+                }
+                flushCards.push_back(tempVect);
+                tempVect.clear();
+            }
+            int flushNum = 0;
+            int straightNum = 0;
+            for (auto i : flushCards) {
+                if (i.size() > flushNum) {
+                    flushNum = i.size();
+                }
+            }
+
+            for (auto i : straightCards) {
+                if (i.size() > straightNum) {
+                    straightNum = i.size();
+                }
+            }
+
+            int biggestNum = 0;
+            int biggestVect = 0;
+            badCards.clear();
+            if (flushNum >= straightNum) {
+                for (int iter = 0; iter < flushCards.size(); iter++) {
+                    if (flushCards.at(iter).size() > biggestNum) {
+                        biggestNum = flushCards.at(iter).size();
+                        biggestVect = iter;
+                    }
+                }
+
+                for (int iter = 0; iter < flushCards.size(); iter++) {
+                    if (iter == biggestVect) {
+                        for (auto i : flushCards.at(iter)) {
                             goodCards.push_back(i);
                         }
                     }
                     else {
-                        if (!(streak)) {
-                            badCards.push_back(prevCard);
-                        }
-                        else {
-                            streak = false;
-                        }
-                        if (i->GetSuit() == goodCards.back()->GetSuit() && i->GetNum() == goodCards.back()->GetNum()) {
+                        for (auto i : flushCards.at(iter)) {
                             badCards.push_back(i);
                         }
                     }
-                    prevCard = i;
+                }
+            }
+            else {
+                for (int iter = 0; iter < straightCards.size(); iter++) {
+                    if (straightCards.at(iter).size() > biggestNum) {
+                        biggestNum = straightCards.at(iter).size();
+                        biggestVect = iter;
+                    }
+                }
+
+                for (int iter = 0; iter < straightCards.size(); iter++) {
+                    if (iter == biggestVect) {
+                        for (auto i : straightCards.at(iter)) {
+                            goodCards.push_back(i);
+                        }
+                    }
+                    else {
+                        for (auto i : straightCards.at(iter)) {
+                            badCards.push_back(i);
+                        }
+                    }
                 }
             }
         }
 
+        //**
 
         if (badCards.size() >= 3) {
             if (hasAce) {
@@ -763,10 +806,6 @@
             discardCount = badCards.size();
         }
 
-        for (int iter = discardCount; iter > 0; iter--) {
-            badCards.pop_back();
-        }
-
         for (int iter = 0; iter < vCards.size(); iter++) {
             for (auto k : badCards) {
                 if ((k->GetNum() == vCards.at(iter).GetNum()) && (k->GetSuit() == vCards.at(iter.GetSuit()))) {
@@ -775,6 +814,18 @@
             }
         }
         prevCard = nullptr;
+        badCards.clear();
+        goodCards.clear();
+        straightCheck.clear();
+        flushCheck.clear();
+        for (auto i : flushCards) {
+            i.clear();
+        }
+        flushCards.clear();
+        for (auto i : straightCards) {
+            i.clear();
+        }
+        straightCards.clear();
 
     }
 
