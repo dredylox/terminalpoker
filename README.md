@@ -1,28 +1,36 @@
-# terminalpoker
+# primitive-poker
 A simple text-based poker game WIP.
 
+**Version 0.5.1**
+- Have begun to test and refine the functionality of the CPU's card selection and discard functions
+   - This has intermittent memory errors when discarding and drawing new cards, and mysterious selection errors when picking cards to drop
+      - Sometimes the CPU will discard an obvious pair - there are instances when the CPU could have had a 3 of a kind, but failed because it discarded a card that didn't make sense
+      - There are instances where the CPU will choose the wrong color card to discard for a flush; it should select the suit of the highest value card first and foremost in the instance of a tie
+      - I can imagine the above error about flushes will also apply to straight selection as well
+   - Despite bugs and errors revealing themselves, progress has been made and general, rough skeleton of the subroutine is revealing itself
+
+**Version 0.5.0**
+- Begun the process of implementing and refining all CPU algorithms, functions, and methods.
+   - JudgeHand() and GiveTell() seem to be working correctly.
+   - In the process of implementing the DiscardCard() function.  There seems to be issues with determining the best cards to drop to shoot for a flush or a straight; an invalid pointer, sigabort, and etc. misc errors with memory are occuring.  Need to investigate further as more refining and testing is done.
+      - This involved the arduous process of ironing out an error with a pointer to an iterator - the pointer always pointed to where the iterator was pointing, resulting in issues.  Range-based for-loops don't appear to be the play when it comes to functions that take a previous card and compare it to a current card - could possibly be a hint for further errors and bugs
+   - Have not yet attempted to test and/or implement the CPU's betting and calling/raising function
+
+============
 
 
-**Version 0.4.4**
+**Version 0.4.0**
 - Defined an (untested) method for which the CPU player can determine which cards are "good" and which cards are "bad" and should be discarded.
    - The CPU will prioritize "low-hanging fruit."  If it finds any matching cards, it will try and go for pairs, three-of-a-kind, full houses, and etc.
    - If it cannot find any matching cards, it will go for flushes, as they are statistically more likely than straights - it will see how many cards of matching suits it has, and then see how many cards "within range" of a straight it has.  If among the candidate sets of cards (using a vector of card vectors) it finds, it will pick the largest, unless there is a tie between a flush and a straight, in which it will pick the flush - as it is statistically a better bet (and statistically, the odds of winning with a flush are much higher than the odds of them beating your flush with a straight and beyond
    - If a flush ties a flush or a straight ties a straight, the first one it finds will be selected.  This is because due to the nature of the hands already being pre-sorted, the first sets of values in the vector of vectors will always contain the more "valuable" pair - the first cards in the vector are the highest ranked (Aces will always be first, two's will always be last)
    - It will then go throught the actual card vector for the players hand and match the actual card position in their hand with the card suit and value in the "bad cards" vector.  When it hits, it knows that this particular position is where that card is in the hand - it stores that number in a vector of ints, which is passed back to the calling function to be used to discard the particular bad cards from the CPU player's hand.
-
-**Version 0.4.3**
 - Added and defined a subroutine by which the CPU can discard undesirable cards.
    - As it stands, this is a straightforward task that assumes that all CPU's will pick the most obvious option.  I am not sure if this will change to give the CPU more decision-making capability, as "poor" cards are pretty straight forward, and I don't want to overcomplicate CPU decision making.  I think, instead, a stat-based dice check will determine if the CPU will decide to discard cards at all, and another stat-based dice roll will determine how "strict" the CPU is; if they will be willing to keep their cards on a more risky hand.
-
-**Version 0.4.2**
 - Further defined the CPU's betting algorithm and begun to define means for it to communicate with the player and the player's ability to communicate with the CPU in terms of betting and bluffing.
-
-**Version 0.4.1**
 - Added functionality for CPU to gather information from other players based on stats, and to use this information to increase and decrease the likeliness that they will make a certain decision - such as betting, folding, and how much to bet by.
    - Very much a WIP - Need to add functionality for generating an "opinion" based on player tells before this will be functional
    - Also need to generate a similar function for deciding on raises and calls - the math for determining how "worth it" a call is vs folding as well as based on how much money they've already put into the pot need to be formulated
-
-**Version 0.4.0**
 - Begun to define the CPU's betting functionality using a convergent decision-tree algorithm that will allow the CPU to use its perception, bluff, and aggressiveness stats to evaluate other players' tells and bluffs, its own hand value, the likeliness it thinks it has to win a hand, how much it's willing to bet on a good or bad hand, and how likely it is to fold given the circumstances
 
 ============

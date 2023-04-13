@@ -70,6 +70,12 @@ public:
     void ShowScore(int, double) const;                 //Prints out the specific hand the player has
 
 //******
+    void SelectCards(std::vector<int>&);
+
+//******
+    void CPUDiscard(Deck&, std::vector<int>&);
+
+//******
     ~Hand();
 
 private:

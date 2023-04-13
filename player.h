@@ -14,6 +14,7 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
+#include "circularlList.h"
 #include "hand.h"
 #include <random>
 
@@ -102,11 +103,34 @@ public:
     CPU(Deck&/*in&out*/ myDeck, float/*in*/ myCash);                        //Generates a player, gives them a hand of 5 cards and a sum of cash
 
 //******
-    float BetCash(int, Deck&, vector<Perception>);                          //The CPU chooses how much money to bet on a hand - bets are made based on how well the CPU can
+    float BetCash(int, Deck&, std::vector<PlayerPerception>);                          //The CPU chooses how much money to bet on a hand - bets are made based on how well the CPU can
                                                                             //...bluff, how well they can call opponents tells, and how aggressive the player is
 //******
-    float CallBet(float, int, Deck&, vector<Perception>);                   //The CPU can choose to call or raise an existing bet - calls and raises are made based on how well the CPU can
+    float CallBet(float, int, Deck&, std::vector<PlayerPerception>);                   //The CPU can choose to call or raise an existing bet - calls and raises are made based on how well the CPU can
                                                                             //...bluff, how well they can call opponents tells, and how aggressive the player is
+//******
+    void GetTell(PlayerPerception);
+
+//******
+    void GetTell();
+
+//******
+    void DiscardCards(Deck&);
+
+//******
+    float BetCash(int playerNum, Deck& dInput, std::vector<PlayerPerception> inPerception,
+                       std::vector<double> inScores, std::vector<int> inBluff,
+                       std::vector<PlayerPerception> inOpinion);
+
+//******
+    float CallBet(float callValue, int playerNum, Deck& dInput,
+                       std::vector<PlayerPerception> inPerception,
+                       std::vector<double> inScores, std::vector<int> inBluff,
+                       std::vector<PlayerPerception> inOpinion);
+
+
+//******
+    PlayerPerception JudgeHand();
 
 //******
     ~CPU();
