@@ -324,6 +324,8 @@ private:
             std::cout << "\n\n";
             hCards->CPUDiscard(dInput, selections);
         }
+
+        JudgeHand();
     }
 
 //******

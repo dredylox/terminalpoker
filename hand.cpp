@@ -646,21 +646,21 @@
         std::vector<std::vector<Card*>> flushCards;                     //Free
 
         for (int iter = 0; iter < vCards.size(); iter++) {
-            std::cout << "\n\nTest 01\n\n";
+            //std::cout << "\n\nTest 01\n\n";
             Card* i = &vCards.at(iter);
             if (i->GetNum() == ACE) {
                 hasAce = true;
             }
             if (prevCard == nullptr) {
                 prevCard = i;
-                std::cout << "\n\nTest 02\n\n";
+              //  std::cout << "\n\nTest 02\n\n";
             }
             else {
-                std::cout << "\ni    = " << i->GetNum()
-                              << "\nprev = " << prevCard->GetNum()
-                              << "\ni suit   = " << i->GetSuit()
-                              << "\nprevSuit = " << prevCard->GetSuit()
-                              << "\n\n\n";
+                //std::cout << "\ni    = " << i->GetNum()
+                  //            << "\nprev = " << prevCard->GetNum()
+                    //          << "\ni suit   = " << i->GetSuit()
+                      //        << "\nprevSuit = " << prevCard->GetSuit()
+                        //      << "\n\n\n";
                 if (i->GetNum() == prevCard->GetNum()) {
 
                     if (streak) {
@@ -671,7 +671,7 @@
                         goodCards.push_back(prevCard);
                         goodCards.push_back(i);
                     }
-                std::cout << "\n\nTest 03\n\n";
+                //std::cout << "\n\nTest 03\n\n";
                 }
                 else {
                     if (!(streak)) {
@@ -687,7 +687,7 @@
                         straightCheck.push_back(i);
                         flushCheck.push_back(i);
                     }
-                    std::cout << "\n\nTest 04\n\n";
+                  //  std::cout << "\n\nTest 04\n\n";
                 }
             }
             prevCard = i;
@@ -698,96 +698,96 @@
                   << "\n\n\n";
         //**
 
-        std::cout << "\n\nTest 05\n\n";
+        //std::cout << "\n\nTest 05\n\n";
                                                                                                             //NEED TO REANLYZE ALL OF THIS - THE WRONG VALUES ARE BEING SELECTED WHEN SORTING THROUGH THE VECTORS
                                                                                                             //!!!!!!!!!!!!!!!!!!!!
                                                                                                             //!!!!!!!!!!!!!!!!!!!!
                                                                                                             //!!!!!!!!!!!!!!!!!!!!
         if (goodCards.size() == 0) {
-            std::cout << "\n\nTest 06\n\n";
+          //  std::cout << "\n\nTest 06\n\n";
             while (straightCheck.size() > 0) {
-                std::cout << "\n\nStraightCheck size = " << straightCheck.size() << "\n\n";
-                std::cout << "\n\nTest 07\n\n";
+            //    std::cout << "\n\nStraightCheck size = " << straightCheck.size() << "\n\n";
+              //  std::cout << "\n\nTest 07\n\n";
                 std::vector<int> tempNums;
                 CardNum tempNum;
                 for (int iter = 0; iter < straightCheck.size(); iter++) {
-                    std::cout << "\n\nTest 08\n\n";
+                //    std::cout << "\n\nTest 08\n\n";
                     if (iter == 0) {
-                        std::cout << "\n\nTest 41, iter " << iter << "\n\n";
+                  //      std::cout << "\n\nTest 41, iter " << iter << "\n\n";
                         tempNum = straightCheck.at(iter)->GetNum();
-                        std::cout << "\n\nTest 42, iter " << iter << "\n\n";
+                    //    std::cout << "\n\nTest 42, iter " << iter << "\n\n";
                         tempNums.push_back(iter);
-                        std::cout << "\n\nTest 43, iter " << iter << "\n\n";
+                      //  std::cout << "\n\nTest 43, iter " << iter << "\n\n";
                     }
                     else {
-                        std::cout << "\n\nTest 09\n\n";
+                        //std::cout << "\n\nTest 09\n\n";
                         if (straightCheck.at(iter)->GetNum() < tempNum && straightCheck.at(iter)->GetNum() > tempNum - 5) {
-                            std::cout << "\n\nTest 44, iter " << iter << "\n\n";
+                          //  std::cout << "\n\nTest 44, iter " << iter << "\n\n";
                             tempNums.push_back(iter);
                         }
                     }
                 }
                 std::vector<Card*> tempVect;
                 for (auto i : tempNums) {
-                    std::cout << "\n\nTest 10\n\n";
+                    //std::cout << "\n\nTest 10\n\n";
                     tempVect.push_back(straightCheck.at(i));
                 }
                 int rangeCount = 0;
                 for (auto i : tempNums) {
                     i -= rangeCount;
-                    std::cout << "\n\nTest 11\n\n";
-                    std::cout << "i = " << i << "\n\n";                                     //NEED TO REANALYZE
-                    std::cout << "straightCheck = " << straightCheck.size() << "\n\n";
+                   // std::cout << "\n\nTest 11\n\n";
+                  //  std::cout << "i = " << i << "\n\n";                                     //NEED TO REANALYZE
+                    //std::cout << "straightCheck = " << straightCheck.size() << "\n\n";
                     straightCheck.at(i) = nullptr;
                     straightCheck.erase(straightCheck.begin() - i);
                     rangeCount++;
                 }
-                std::cout << "\n\nTest 40\n\n";
+                //std::cout << "\n\nTest 40\n\n";
                 straightCards.push_back(tempVect);
                 tempVect.clear();
-                std::cout << "\n\nTest 12\n\n";
+                //std::cout << "\n\nTest 12\n\n";
             }
-            std::cout << "\n\nTest 13\n\n";
+            //std::cout << "\n\nTest 13\n\n";
             while (flushCheck.size() > 0) {
-                std::cout << "\n\nTest 14\n\n";
+              //  std::cout << "\n\nTest 14\n\n";
                 std::vector<int> tempNums;
                 CardSuit tempSuit;
                 for (int iter = 0; iter < flushCheck.size(); iter++) {
-                    std::cout << "\n\nTest 15\n\n";
+                //    std::cout << "\n\nTest 15\n\n";
                     if (iter == 0) {
-                        std::cout << "\n\nTest 16\n\n";
+                  //      std::cout << "\n\nTest 16\n\n";
                         tempSuit = flushCheck.at(iter)->GetSuit();
                         tempNums.push_back(iter);
                     }
                     else {
-                        std::cout << "\n\nTest 17\n\n";
+                    //    std::cout << "\n\nTest 17\n\n";
                         if (tempSuit == flushCheck.at(iter)->GetSuit()) {
                             tempNums.push_back(iter);
                         }
                     }
                 }
-                std::cout << "\n\nTest 18\n\n";
+                //std::cout << "\n\nTest 18\n\n";
                 std::vector<Card*> tempVect;
                 for (auto i : tempNums) {
-                    std::cout << "\n\nTest 19\n\n";
+                  //  std::cout << "\n\nTest 19\n\n";
                     tempVect.push_back(flushCheck.at(i));
                 }
                 int rangeCheck = 0;
                 for (auto i : tempNums) {
                     i -= rangeCheck;
-                    std::cout << "\n\nTest 20\n\n";
+                    //std::cout << "\n\nTest 20\n\n";
                     flushCheck.at(i) = nullptr;
                     flushCheck.erase(flushCheck.begin() + i);
                     rangeCheck++;
                 }
                 flushCards.push_back(tempVect);
-                std::cout << "\n\nTest 21\n\n";
+                //std::cout << "\n\nTest 21\n\n";
                 for (auto i : tempVect) {
                     i = nullptr;
                 }
-                 std::cout << "\n\nTest 22\n\n";
+                 //std::cout << "\n\nTest 22\n\n";
                 tempVect.clear();                                                   //Tempvect free'd appropriately
-                std::cout << "\n\nTest 23\n\n";
+                //std::cout << "\n\nTest 23\n\n";
             }
             int flushNum = 0;
             int straightNum = 0;
@@ -796,29 +796,29 @@
                     flushNum = i.size();
                 }
             }
-             std::cout << "\n\nTest 24\n\n";
+             //std::cout << "\n\nTest 24\n\n";
 
             for (auto i : straightCards) {
                 if (i.size() > straightNum) {
                     straightNum = i.size();
                 }
             }
-             std::cout << "\n\nTest 25\n\n";
+             //std::cout << "\n\nTest 25\n\n";
 
             int biggestNum = 0;
             int biggestVect = 0;
-             std::cout << "\n\nTest 26\n\n";
+             //std::cout << "\n\nTest 26\n\n";
             badCards.clear();
-             std::cout << "\n\nTest 27\n\n";
+             //std::cout << "\n\nTest 27\n\n";
             if (flushNum >= straightNum) {
-                std::cout << "\n\nTest 28\n\n";
+                //std::cout << "\n\nTest 28\n\n";
                 for (int iter = 0; iter < flushCards.size(); iter++) {
                     if (flushCards.at(iter).size() > biggestNum) {
                         biggestNum = flushCards.at(iter).size();
                         biggestVect = iter;
                     }
                 }
-                std::cout << "\n\nTest 29\n\n";
+                //std::cout << "\n\nTest 29\n\n";
 
                 for (int iter = 0; iter < flushCards.size(); iter++) {
                     if (iter == biggestVect) {
@@ -832,17 +832,17 @@
                         }
                     }
                 }
-                std::cout << "\n\nTest 30\n\n";
+                //std::cout << "\n\nTest 30\n\n";
             }
             else {
-                std::cout << "\n\nTest 31\n\n";
+                //std::cout << "\n\nTest 31\n\n";
                 for (int iter = 0; iter < straightCards.size(); iter++) {
                     if (straightCards.at(iter).size() > biggestNum) {
                         biggestNum = straightCards.at(iter).size();
                         biggestVect = iter;
                     }
                 }
-                std::cout << "\n\nTest 32\n\n";
+                //std::cout << "\n\nTest 32\n\n";
 
                 for (int iter = 0; iter < straightCards.size(); iter++) {
                     if (iter == biggestVect) {
@@ -856,12 +856,12 @@
                         }
                     }
                 }
-                std::cout << "\n\nTest 33\n\n";
+                //std::cout << "\n\nTest 33\n\n";
             }
         }
 
         //**
-        std::cout << "\n\nTest 34\n\n";
+        //std::cout << "\n\nTest 34\n\n";
         if (badCards.size() >= 3) {
             if (hasAce) {
                 discardCount = 4;
@@ -869,11 +869,11 @@
             else {
                 discardCount = 3;
             }
-            std::cout << "\n\nTest 35\n\n";
+          //  std::cout << "\n\nTest 35\n\n";
         }
         else {
             discardCount = badCards.size();
-            std::cout << "\n\nTest 36\n\n";
+            //std::cout << "\n\nTest 36\n\n";
 
         }
 
@@ -884,7 +884,7 @@
                 }
             }
         }
-        std::cout << "\n\nTest 37\n\n";
+        //std::cout << "\n\nTest 37\n\n";
 
         prevCard = nullptr;                         //PrevCard free'd appropriately
         for (auto i : badCards) {                   //BadCards free'd appropriately
@@ -916,20 +916,42 @@
             }
             i.clear();
         }
-    std::cout << "\n\nTest 38\n\n";
+    //std::cout << "\n\nTest 38\n\n";
     }
 
 //******
     void Hand::CPUDiscard(Deck& dInput, std::vector<int>& selections) {               //NEED TO CHANGE THIS FUNCTIONS LOGIC TO ALLOW FOR PLAYER STATS TO COME INTO PLAY!!!!!!!
-        for (int iter = 0; iter < selections.size(); iter++) {
-            std::cout << "\n\nIter = " << iter << "\n\n";
-            dInput.ToDiscard(vCards.at(selections.at(iter)));
-            vCards.erase(vCards.begin() + (selections.at(iter)));
+        std::vector<int> cardNums;
+        std::cout << "\n\nselections = " << selections.size() << "\n\n";
+        for (int iter = 0; iter < selections.size(); iter++) {          //MIGHT NOT BE NECESSARY!!
+            std::cout << "\n\nIter = " << iter << "\n\n";               //!!!!!!!!!!!!!!
+            if (cardNums.size() > 0) {                                  //!!!!!!!!!!!!!!
+                /*for (auto i : cardNums) {                               //!!!!!!!!!!!!!!
+                     for (auto &k : selections) {
+                        std::cout << "\n\nPrev k = " << k << "\n\n";
+                        if (k > i) {
+                            k--;
+                            std::cout << "\n\nPost k = " << k << "\n\n";
+                        }
+                    }
+                }
+                */
+
+                selections.at(iter) -= iter;
+            }
+            std::cout << selections.at(iter);
+            if (selections.at(iter) < vCards.size()) {
+                dInput.ToDiscard(vCards.at(selections.at(iter)));
+                vCards.erase(vCards.begin() + (selections.at(iter)));
+                cardNums.push_back(selections.at(iter));
+            } else {
+                std::cout << "\n\nError - selection is " << selections.at(iter) << " whereas hand size is " << vCards.size() << "\n\n";
+            }
         }
+
         DrawCard(selections.size(), dInput);
         SortHand();
     }
-
 //******
     void Hand::ShowScore(int iOutput, double iTotal) const {
         switch (iOutput) {

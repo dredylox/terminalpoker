@@ -1,5 +1,12 @@
-# terminalpoker
+# primitive-poker
 A simple text-based poker game WIP.
+
+**Version 0.5.2.1**
+- Fixed the unorthodox behavior by simplifying the discard function for CPU's by which is selects the cards that it would like to discard.  This causes the known unorthodox behavior to cease.
+
+**Version 0.5.2**
+- Fully defined the selection and discard functions for the CPU
+   - There is unorthodox behavior where if the first two cards are to be discarded as well as the last card, sometimes unintended cards are selected for discard.  I don't know exactly why this is the case, but it doesn't cause that many problems with gameplay, and if need be is servicable although not optimal.  Will investigate further during the MVP phase of release.
 
 **Version 0.5.1**
 - Have begun to test and refine the functionality of the CPU's card selection and discard functions
