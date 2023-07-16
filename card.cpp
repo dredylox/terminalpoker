@@ -10,9 +10,7 @@
 //  enums related to cards in a card game       *
 //                                              *
 //***********************************************
-//  Version 0.0.4.1 pushed by David Coleman III *
-//  on  01 - 24 - 23                            *
-//***********************************************
+
 
     #include "card.h"
 
@@ -21,20 +19,32 @@
     Card::Card() { }                    //Default constructor - Does nothing as of yet
 
 //******
-    Card::Card(const Card& cOther) {    //Copy constructor - Creates a new object by copying the cOther   //THIS FUNCTION IS ALL KINDS OF FUCKED UP
-                                                                                                          //  DO
-        SetSuit(int(cOther.GetSuit()));                                                                     //  NOT
-        SetNum(int(cOther.GetNum()));                                                                       //  USE
-        SetState(cOther.GetState());
+    Card::Card(const Card& cOther) {    //Copy constructor - Creates a new object by copying the cOther
+
+        SetComp(cOther.GetComp());
+        SetSuit(int(cOther.GetSuit()));  //Set's the suit of the old card to the new card
+        SetNum(int(cOther.GetNum()));    //Set's the rank of the old card to the new card
+        SetState(cOther.GetState());     //Set's the state of the old card to the new card
+    }
+
+    //******
+    Card::Card(int iSuitIn, int iNumIn) {   //Non-default constructor - Creates the card, uses the input parameter
+                                        //...to generate suit and rank value.
+        compMode = false;
+        SetSuit(iSuitIn);               //Set's the card's suit to the desired suit
+        SetNum(iNumIn);                 //Set's the card's rank to the desired rank
+        state = IN_DECK;                //Set's the card's state to the desired state
     }
 
 //******
-    Card::Card(int iSuitIn, int iNumIn) {   //Non-default constructor - Creates the card, uses the input parameter
-                                            //...to generate suit and rank value.
-        SetSuit(iSuitIn);
-        SetNum(iNumIn);
-        state = IN_DECK;
+    Card::Card(int iSuitIn, int iNumIn, bool compatiblityMode) {   //Non-default constructor - Creates the card, uses the input parameter
+        compMode = compatiblityMode;    //Compability mode - used to change symbols if the computer cannot read unicode poker suits in text format
+                                        //...to generate suit and rank value.
+        SetSuit(iSuitIn);               //Set's the card's suit to the desired suit
+        SetNum(iNumIn);                 //Set's the card's rank to the desired rank
+        state = IN_DECK;                //Set's the card's state to the desired state
     }
+
 //******
     CardSuit Card::GetSuit() const {             //Returns the card's suit to the calling function
         return suit;
@@ -55,7 +65,12 @@
     void Card::SetSuit(int iSuitIn) {         //Sets the suit to the input parameter
         suit = CardSuit(iSuitIn);
         suitStr = SUIT_STR[iSuitIn];
-        suitSym = SUIT_SYM[iSuitIn];
+        if (compMode) {
+            suitSym = SUIT_SYM_COMP[iSuitIn];
+        } else {
+            suitSym = SUIT_SYM[iSuitIn];
+        }
+
     }
 //******
     void Card::SetNum(int iNumIn) {           //Sets the rank to the input parameter
@@ -65,7 +80,17 @@
 
 //******
     void Card::SetState(CardState inState) {    //Sets the current card state
-        state = inState;
+        state = inState;                            //****UNUSED****
+    }
+
+//****
+    void Card::SetComp(bool compatibility) {
+        compMode = compatibility;
+    }
+
+//*****
+    bool Card::GetComp() const {
+        return compMode;
     }
 
 //******
@@ -74,24 +99,21 @@
     }
 
 //******
-    std::string Card::GetSuitSym() const {
+    std::string Card::GetSuitSym() const {            //Gets the string of the suit from the card
         return suitSym;
     }
 
 //******
-    bool Card::operator==(const Card& cOther) const {
+    bool Card::operator==(const Card& cOther) const {   //Overload's the == operator for equivilency
         CardNum cnTemp = cOther.GetNum();
         CardSuit csTemp = cOther.GetSuit();
-        if (suit == csTemp) {
-            if (num == cnTemp) {
-                return true;
-            }
+        if (suit == csTemp) {                   //If the rank and suit are equal from the currCard and the comparedCard...
+            if (num == cnTemp) {                    //...true is returned.
+                return true;                    //If not....
+            }                                       //...false is returned
         }
         return false;
     }
-
-//******
-    Card::~Card() {  }
 
 /*
     CardSuit suit;

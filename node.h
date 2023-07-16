@@ -9,9 +9,7 @@
 //  linked list)                                *
 //                                              *
 //***********************************************
-//  Version 0.0.4.1 pushed by David Coleman III *
-//  on  01 - 24 - 23                            *
-//***********************************************
+
 
 
 
@@ -24,9 +22,9 @@ template <class Type>
 class Node {
 public:
     Node(Type tInput) {             //Constructor - Sets data to parameter
-        data = tInput;
-        next = nullptr;
-        prev = nullptr;
+        data = tInput;                  //the actual data the node carry's
+        next = nullptr;                 //next - the next item in the list
+        prev = nullptr;                 //prev - the previous item in the list
     }
 
 //******

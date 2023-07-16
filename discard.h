@@ -6,12 +6,10 @@
 //  This C++ class serves as a stack structure  *
 //  of card objects.  This is the place where   *
 //  cards will go after a discard from drawing  *
-//  or after a round of hands                   *
+//  or after a floor of hands                   *
 //                                              *
 //***********************************************
-//  Version 0.0.4.1 pushed by David Coleman III *
-//  on  01 - 24 - 23                            *
-//***********************************************
+
 
 #include "card.h"
 #include <stack>
@@ -40,7 +38,6 @@ public:
     int GetSize();                  //Returns the current size of the discard pile to the calling function
 
 //******
-  //  ~Discard();                        //Destructor - currently does nothing
 
 
 private:

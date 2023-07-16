@@ -10,9 +10,6 @@
 //  enums related to cards in a card game       *
 //                                              *
 //***********************************************
-//  Version 0.0.4.1 pushed by David Coleman III *
-//  on  01 - 24 - 23                            *
-//***********************************************
 
 #ifndef CARD_H
 #define CARD_H
@@ -29,8 +26,9 @@ enum CardNum {TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT,    //The rank of each c
 enum CardState {IN_DECK, IN_HAND, IN_RIVER, IN_DISCARD};
 
 const std::string SUIT_SYM[4] = {u8"♣", u8"♦", u8"♥", u8"♠"};           //String versions of suit...
+const std::string SUIT_SYM_COMP[4] = {"C", "D", "H", "S"};              //String suits - compatible version in case u8 symbols are not compatible
 const std::string SUIT_STR[4] = {" CLUB", " DMND", "HEART", "SPADE"};
-const std::string NUM_STR[13] = {" 2", " 3", " 4", " 5", " 6",     //...and rank.  Translate directlyu with enum values
+const std::string NUM_STR[13] = {" 2", " 3", " 4", " 5", " 6",     //Str version of rank.  Translate directly with enum values
                                  " 7", " 8", " 9", "10", " J",
                                  " Q", " K", " A"};
 
@@ -49,6 +47,10 @@ public:
 //******
     Card(int /*in*/, int/*in*/);    //Non-default constructor - Creates the card, uses the input parameter
                                     //...to generate suit and rank value.
+
+//******
+    Card(int /*in*/, int/*in*/, bool);    //Non-default constructor - Creates the card, uses the input parameter
+                                    //...to generate suit and rank value.  Bool for compatibility mode
 
 //******
     CardSuit GetSuit() const;             //Returns the card's suit to the calling function
@@ -72,25 +74,30 @@ public:
     void SetState(CardState/*in*/); //Sets the state of the card
 
 //******
+    void SetComp(bool);
+
+//******
+    bool GetComp() const;
+
+//******
     CardState GetState() const;           //Gets the state of the card
 
 //******
     std::string GetSuitSym() const;       //Gets the symbol string for the card's suit
 
 //******
-    bool operator==(const Card& cOther) const;
-
-//******
-    ~Card();
+    bool operator==(const Card& cOther) const;  //Overload == operator; allows card equivilency checking with ==
 
 
 private:
-    CardSuit suit;
-    CardNum num;
-    std::string suitStr;
-    std::string numStr;
-    std::string suitSym;
-    CardState state;
+    CardSuit suit;              //The card's suit - spade, diamond, heart, and club
+    CardNum num;                //The card's rank - two through ten, jack, queen, king, and ace
+    std::string suitStr;        //string representation of the card's suit
+    std::string numStr;         //string representation of the card's rank
+    std::string suitSym;        //string represetnation of the card's suit symbol
+    CardState state;            //The state of the card - in hand, in deck, in discard, etc.
+                                    //****THIS ELEMENT/MECHANIC CURRENTLY DOES NOTHING****
+    bool compMode;
 };
 
 

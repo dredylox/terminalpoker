@@ -9,9 +9,7 @@
 //  when playing the game.                      *
 //                                              *
 //***********************************************
-//  Version 0.0.4.1 pushed by David Coleman III *
-//  on  01 - 24 - 23                            *
-//***********************************************
+
 
 
 
@@ -42,6 +40,15 @@ public:
     Deck(int/*in*/);    //Alternative constructor - Generates a deck made of X decks of cards (TO BE IMPLEMENTED LATER);
 
 //******
+    Deck(bool test);    //Alterantive constructor - testing purposes
+
+//******
+    Deck(char test);    //Alternative constructor - testing purposes
+
+//******
+    Deck(std::string test);     //Alternative constructor - testing purposes
+
+//******
     void Shuffle();              //Shuffles the deck
 
 //******
@@ -54,17 +61,17 @@ public:
     void Reshuffle();            //Shuffles the discard pile back into the deck
 
 //******
-    void ToDiscard(Card/*in*/);        //Sends the card passed as argument to the discard pile
+    void ToDiscard(Card/*in*/);  //Sends the card passed as argument to the discard pile
 
 //******
-    int DiscardSize();          //Returns current size of the discard pile to the calling function
+    int DiscardSize();           //Returns current size of the discard pile to the calling function
+
 //******
-   // ~Deck();            //Destructor - currently does nothing
 
 
 private:
-    std::stack<Card> stDeck;
-    Discard disPile;
+    std::stack<Card> stDeck;    //The deck of cards - this is what the player draws from
+    Discard disPile;            //The discard pile - when a player discards, it goes here
 };
 
 #endif // DECK_H
